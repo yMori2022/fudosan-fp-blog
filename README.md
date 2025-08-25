@@ -1,0 +1,1 @@
+# fudosan-fp-blog
