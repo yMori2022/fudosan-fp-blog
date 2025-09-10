@@ -1,0 +1,16 @@
+---
+// タグリンクのチップ
+// props: tag: string, size?: 'sm' | 'md'
+const { tag, size = 'sm' } = Astro.props as { tag: string; size?: 'sm' | 'md' };
+
+const base = 'inline-flex items-center gap-2 rounded bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-slate-200 text-xs font-medium hover:underline';
+const paddings = size === 'md' ? 'px-3 py-1' : 'px-2.5 py-1';
+const href = `/tags/${encodeURIComponent(tag)}/`;
+---
+
+<a href={href} class={`${base} ${paddings}`}>
+  #{tag}
+  <slot />
+  
+</a>
+

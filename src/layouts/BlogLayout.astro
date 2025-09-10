@@ -1,22 +1,92 @@
 ---
+import '../styles/global.css';
+import TagLink from '@/components/TagLink.astro';
+
 const { title, description, pubDate } = Astro.props;
 ---
 
+<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content={description} />
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body>
-    <article>
-      <header>
-        <h1>{title}</h1>
-        <time>{pubDate?.toLocaleDateString()}</time>
-      </header>
-      <main>
+  <body class="bg-white dark:bg-zinc-950 text-slate-900 dark:text-slate-100">
+    <header class="border-b bg-gradient-to-b from-white to-slate-50 dark:from-zinc-900 dark:to-zinc-950">
+      <div class="mx-auto max-w-3xl px-4 py-10">
+        <a href="/" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">← 記事一覧に戻る</a>
+        <h1 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight">{title}</h1>
+        <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
+          <time>{pubDate ? new Date(pubDate).toLocaleDateString('ja-JP') : ''}</time>
+          {description && <span class="hidden md:inline">•</span>}
+          {description && <span class="line-clamp-1">{description}</span>}
+        </div>
+
+        {Astro.props.tags?.length ? (
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {Astro.props.tags.map((tag: string) => (
+              <li>
+                <TagLink tag={tag} size="md" />
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-3xl px-4 py-10">
+      <article class="entry space-y-6">
         <slot />
-      </main>
-    </article>
+      </article>
+
+      <div class="mt-10">
+        <a href="/" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+            <path fill-rule="evenodd" d="M10.707 19.707a1 1 0 0 1-1.414 0l-6-6a1 1 0 0 1 0-1.414l6-6a1 1 0 1 1 1.414 1.414L6.414 12l4.293 4.293a1 1 0 0 1 0 1.414Z" clip-rule="evenodd" />
+            <path fill-rule="evenodd" d="M21 12a1 1 0 0 1-1 1H4a1 1 0 1 1 0-2h16a1 1 0 0 1 1 1Z" clip-rule="evenodd" />
+          </svg>
+          記事一覧へ戻る
+        </a>
+      </div>
+    </main>
+
+    <footer class="py-8"></footer>
   </body>
 </html>
+
+<style>
+  /* 記事本文のタイポグラフィ（Typography プラグイン未使用） */
+  .entry :where(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+    scroll-margin-top: 6rem;
+    line-height: 1.25;
+    font-weight: 700;
+    margin: 1.6em 0 0.6em;
+  }
+  .entry h2 { font-size: 1.5rem; }
+  .entry h3 { font-size: 1.25rem; }
+  .entry p { margin: 1em 0; color: inherit; }
+  .entry a { color: #2563eb; text-decoration: underline; }
+  .entry ul, .entry ol { padding-left: 1.25rem; margin: 0.8em 0; }
+  .entry li { margin: 0.3em 0; }
+  .entry blockquote {
+    margin: 1.2em 0; padding-left: 1rem; border-left: 4px solid rgba(100,116,139,0.4);
+    color: rgba(100,116,139,1);
+  }
+  .entry code {
+    background: rgba(148,163,184,0.15);
+    padding: 0.15rem 0.35rem; border-radius: 0.375rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.95em;
+  }
+  .entry pre {
+    overflow-x: auto; padding: 1rem; border-radius: 0.5rem; background: #0b1020; color: #e5e7eb;
+  }
+  .entry pre code { background: transparent; padding: 0; border-radius: 0; }
+  .entry img { display: block; max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1rem auto; }
+  .entry table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .entry th, .entry td { border: 1px solid rgba(148,163,184,0.4); padding: 0.5rem 0.75rem; }
+  .entry thead th { background: rgba(148,163,184,0.15); }
+</style>
