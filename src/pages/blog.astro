@@ -1,0 +1,19 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog");
+---
+
+<html lang="ja">
+  <body>
+    <h1>ブログ記事一覧</h1>
+    <ul>
+      {posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          <time>{post.data.pubDate.toLocaleDateString()}</time>
+        </li>
+      ))}
+    </ul>
+  </body>
+</html>
